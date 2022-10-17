@@ -1,18 +1,4 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[20]:
-
-
-## for data
 import pandas as pd
-
-
-
-
-
-
-
 
 import numpy as np
 
@@ -26,14 +12,11 @@ import scipy
 #import statsmodels.api as sm
 
 ## for machine learning
-from sklearn.model_selection import train_test_split
-from sklearn import model_selection, preprocessing, feature_selection, ensemble, linear_model, metrics, decomposition
 
 # Import Gaussian Naive Bayes classifier
 from sklearn.naive_bayes import GaussianNB
 
 # Import Evaluation Metric
-from sklearn.metrics import accuracy_score
 
 
 ## for explainer
@@ -46,11 +29,9 @@ from sklearn.metrics import accuracy_score
 #https://towardsdatascience.com/machine-learning-with-python-classification-complete-tutorial-d2c99dc524ec
 
 
-from sklearn.preprocessing import StandardScaler 
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.preprocessing import StandardScaler
 
-import pandas as pd 
+import pandas as pd
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -91,11 +72,25 @@ from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 
-# LOAD DATA 
+# LOAD DATA
 # Convert dataset to a pandas dataframe:
-dataset = pd.read_csv('iris.csv') 
-print(dataset.columns)
-print(dataset)
+import pandas as pd
+
+
+#Nicholas
+dataset = pd.read_csv('aquila_table1.tsv', delimiter=';',comment='#')
+X = dataset[['Signi070', 'Sp070', 'e_Sp070',
+       'Sp070/Sbg070', 'Sconv070', 'Stot070', 'e_Stot070', 'FWHMa070',
+       'FWHMb070', 'PA070', 'Signi160', 'Sp160', 'e_Sp160', 'Sp160/Sbg160',
+       'Sconv160', 'Stot160', 'e_Stot160', 'FWHMa160', 'FWHMb160', 'PA160',
+       'Signi250', 'Sp250', 'e_Sp250', 'Sp250/Sbg250', 'Sconv250', 'Stot250',
+       'e_Stot250', 'FWHMa250', 'FWHMb250', 'PA250', 'Signi350', 'Sp350',
+       'e_Sp350', 'Sp350/Sbg350', 'Sconv350', 'Stot350', 'e_Stot350',
+       'FWHMa350', 'FWHMb350', 'PA350', 'Signi500', 'Sp500', 'e_Sp500',
+       'Sp500/Sbg500', 'Stot500', 'e_Stot500', 'FWHMa500', 'FWHMb500', 'PA500',
+       'SigniNH2', 'NpH2', 'NpH2/Nbg', 'NconvH2', 'NbgH2', 'FWHMaNH2',
+       'FWHMbNH2', 'PANH2', 'NSED', 'CSARflag']]
+y = dataset['Coretype']
 
 
 # In[27]:
@@ -103,7 +98,7 @@ print(dataset)
 
 # TASK: LOAD DATA THAT WAS GIVEN TO YOU
 # Convert dataset to a pandas dataframe
-dataset = pd.read_csv('iris.csv') 
+dataset = pd.read_csv('aquila_table1.tsv')
 print(dataset.columns)
 
 # TASK: INSPECT DATA
@@ -114,18 +109,18 @@ print(dataset.columns)
 
 
 # TASK: DATA ENGINEERING, FEATURE ENGINEERING
-# Use head() function to return the first 5 rows: 
-print(dataset.head()) 
+# Use head() function to return the first 5 rows:
+print(dataset.head())
 # Assign values to the X and y variables:
 X = dataset.iloc[:, :-1].values
-y = dataset.iloc[:, 4].values 
+y = dataset.iloc[:, 4].values
 X = dataset[['sepal.length', 'sepal.width', 'petal.length', 'petal.width']]
 y = dataset['variety']
 
 print("Summary Statistics of the X dataframe \n", X.describe())
 
 # Split dataset into random train and test subsets:
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.30) 
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.30)
 
 
 print(X.shape, y.shape)
@@ -134,7 +129,7 @@ print(X_test.shape, y_test.shape)
 
 # Standardizing variable
 #Instruction: This step is optional
-# You can use non, one or all of these scalers to find better model, 
+# You can use non, one or all of these scalers to find better model,
 # i.e. models with better accuracy & precision.
 # For other scaling or feature engineering methods, check this ref:
 # https://scikit-learn.org/stable/modules/classes.html?highlight=sklearn+preprocessing#module-sklearn.preprocessing
@@ -143,7 +138,7 @@ print(X_test.shape, y_test.shape)
 scaler = StandardScaler()
 scaler.fit(X_train)
 X_train = scaler.transform(X_train)
-X_test = scaler.transform(X_test) 
+X_test = scaler.transform(X_test)
 
 X_train_df = pd.DataFrame(X_train)
 print("\n Summary Statistics of the X dataframe after Standard Scaling\n", X_train_df.describe())
@@ -152,7 +147,7 @@ print("\n Summary Statistics of the X dataframe after Standard Scaling\n", X_tra
 scaler = MinMaxScaler()
 scaler.fit(X_train)
 X_train = scaler.transform(X_train)
-X_test = scaler.transform(X_test) 
+X_test = scaler.transform(X_test)
 
 X_train_df = pd.DataFrame(X_train)
 print("\n Summary Statistics of the X dataframe after MinMaxScaler Scaling\n", X_train_df.describe())
@@ -181,19 +176,19 @@ print("\n Summary Statistics of the X dataframe after MinMaxScaler Scaling\n", X
 
 
 # Use the KNN classifier to fit data:
-classifier = KNeighborsClassifier(n_neighbors=3)  
+classifier = KNeighborsClassifier(n_neighbors=3)
 
 # Gaussian Process Classifier
-classifier = DecisionTreeClassifier(max_depth=5)  
+classifier = DecisionTreeClassifier(max_depth=5)
 
 # Support Vector Machine
 classifier = SVC(kernel="linear", C=0.025)
 
 # Support Vector Machine
-classifier = SVC(gamma=2, C=1)  
+classifier = SVC(gamma=2, C=1)
 
 # Gaussian Process Classifier
-classifier = GaussianProcessClassifier(1.0 * RBF(1.0)) 
+classifier = GaussianProcessClassifier(1.0 * RBF(1.0))
 
 # RandomForestClassifier
 classifier = RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1)
@@ -205,7 +200,7 @@ classifier = MLPClassifier(alpha=1, max_iter=1000)
 classifier = AdaBoostClassifier()
 
 # GnB
-classifier = GaussianNB()  
+classifier = GaussianNB()
 
 # QuadraticDiscriminantAnalysis
 classifier = QuadraticDiscriminantAnalysis()
@@ -217,13 +212,13 @@ classifier.fit(X_train, y_train)  # Train the classifier
 
 
 # TASK: PREDICT NEW VALUES
-# Predict y data with classifier: 
+# Predict y data with classifier:
 y_predict = classifier.predict(X_test)
 
 #TASK: EVALUATE RESULTS
-# Print results: 
+# Print results:
 print(confusion_matrix(y_test, y_predict))
-print(classification_report(y_test, y_predict)) 
+print(classification_report(y_test, y_predict))
 
 # Evaluate label (subsets) accuracy
 print(accuracy_score(y_test, y_predict))
@@ -240,4 +235,64 @@ print(y_test, y_predict)
 
 
 #https://towardsdatascience.com/machine-learning-with-python-classification-complete-tutorial-d2c99dc524ec
+
+
+# In[ ]:
+
+
+
+
+
+# In[47]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
 
